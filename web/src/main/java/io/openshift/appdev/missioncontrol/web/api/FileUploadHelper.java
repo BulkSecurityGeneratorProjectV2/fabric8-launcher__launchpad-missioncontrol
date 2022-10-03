@@ -30,6 +30,9 @@ class FileUploadHelper {
             ZipEntry zipEntry = null;
             while ((zipEntry = zis.getNextEntry()) != null) {
                 Path entry = outputDir.resolve(zipEntry.getName());
+                if (!entry.normalize().startsWith(outputDir.normalize())) {
+                    throw new IOException("Bad zip entry");
+                }
                 if (zipEntry.isDirectory()) {
                     Files.createDirectories(entry);
                 } else {
